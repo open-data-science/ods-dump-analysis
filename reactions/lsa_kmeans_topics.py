@@ -35,10 +35,10 @@ X = cv.fit_transform(distinct_reactions)
 
 # clustering
 
-N = 60
+N = 40
 K = 40
 
-svd = TruncatedSVD(n_components=K, random_state=1)
+svd = TruncatedSVD(n_components=N, random_state=1)
 X_svd = svd.fit_transform(X)
 X_svd = normalize(X_svd)
 
