@@ -5,12 +5,15 @@ import pandas as pd
 
 from collections import defaultdict
 
-ods_dump_file = 'ods-2016-11-27.zip'
+ods_dump_file = '../data/opendatascience Slack export Nov 27 2016.zip'
 
 with ZipFile(ods_dump_file, 'r') as zfile:
 
     with zfile.open('users.json') as users_file:
-        users = json.load(users_file)
+        users_text = users_file.read()
+        if type(users_text) is not str:
+            users_text = users_text.decode('utf8')
+        users = json.loads(users_text)
         user_ids = {u['id']: u['name'] for u in users}
 
     msg_id = 0
@@ -24,7 +27,10 @@ with ZipFile(ods_dump_file, 'r') as zfile:
         channel, date = name.split('/')
 
         with zfile.open(name) as msgs_file:
-            messages = json.load(msgs_file)
+            msgs_text = msgs_file.read()
+            if type(msgs_text) is not str:
+                msgs_text = msgs_text.decode('utf8')
+            messages = json.loads(msgs_text)
 
             for m in messages:
                 if 'user' not in m:
@@ -81,6 +87,9 @@ df_reaction_logs.to_csv('reaction-logs.txt', sep='\t', index=False)
 
 message_texts = {cnts_dict[k]: v for (k, v) in message_texts.items()}
 
-df_messages = pd.DataFrame(message_texts.items(), columns=['message_id', 'text'])
+items = message_texts.items()
+if type(items) is not list:
+    items = list(items)
+df_messages = pd.DataFrame(items, columns=['message_id', 'text'])
 df_messages.to_csv('reaction-messages.txt', encoding='utf-8', sep='\t', index=False)
 
