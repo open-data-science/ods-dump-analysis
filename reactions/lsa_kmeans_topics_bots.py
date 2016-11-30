@@ -9,7 +9,7 @@ from sklearn.preprocessing import normalize
 # preparing the data
 
 df_reactions = pd.read_csv('reaction-logs.txt', sep='\t')
-df_reactions = df_reactions[df_reactions.channel != 'bots']
+df_reactions = df_reactions[df_reactions.channel == 'bots']
 df_reactions.ts = pd.to_datetime(df_reactions.ts)
 
 aug16 = pd.to_datetime('2016-08-16')
@@ -33,8 +33,8 @@ X = cv.fit_transform(distinct_reactions)
 
 # clustering
 
-N = 40
-K = 40
+N = 20
+K = 20
 
 svd = TruncatedSVD(n_components=N, random_state=1)
 X_svd = svd.fit_transform(X)
